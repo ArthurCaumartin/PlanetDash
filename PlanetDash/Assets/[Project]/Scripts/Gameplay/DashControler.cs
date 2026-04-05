@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -5,14 +7,22 @@ using UnityEngine.InputSystem;
 
 public class DashControler : MonoBehaviour
 {
+    [SerializeField] private DashVisual _dashVisual;
+    [SerializeField] private LayerMask _detectionLayer;
     [SerializeField] private float _coolDownDuration = 1f;
+    [SerializeField] private float _dashDamage = 50f;
     [SerializeField] private float _dashRange = 1f;
+    [SerializeField] private float _detectionRadius = 3;
     private CircularSurfaceMovement _circularSurfaceMovement;
     private float _coolDownTimer = 0;
+    private Task _dashSequenceTask = null;
+
+    public float DetectionRadius => _detectionRadius;
 
     private void Awake()
     {
         _circularSurfaceMovement = GetComponent<CircularSurfaceMovement>();
+        _dashVisual = GetComponent<DashVisual>();
     }
 
     private void Update()
@@ -22,20 +32,62 @@ public class DashControler : MonoBehaviour
 
     private void OnDash(InputValue value)
     {
+        if (_dashSequenceTask != null) return;
         if (value.Get<float>() > .5f && _coolDownTimer > _coolDownDuration)
         {
-            print("DashInput");
+            // print("DashInput");
             _coolDownTimer = 0;
-            _circularSurfaceMovement.Dash(_circularSurfaceMovement.Velocity.x, _dashRange, 0.2f, out PathData[] paths);
-            
+            _dashSequenceTask = DashSequence();
         }
+    }
+
+    private async Task DashSequence()
+    {
+        _circularSurfaceMovement.enabled = false;
+        PathData[] path = _circularSurfaceMovement.GetPathOnVelocityDirection(_dashRange, GetDetectionResolution());
+        List<Health> detectedHealth = new List<Health>();
+
+        for (int i = 1; i < path.Length; i++)
+        {
+            Collider2D[] cols = Physics2D.OverlapCircleAll(path[i].position, _detectionRadius, _detectionLayer);
+            print(i + " : " + cols.Length);
+            foreach (var item in cols)
+            {
+                Health h = item.GetComponent<Health>();
+                if (h && !detectedHealth.Contains(h)) detectedHealth.Add(h);
+            }
+        }
+
+        print("DetectedHealth : " + detectedHealth.Count);
+
+        _dashVisual.OnDashStart(path);
+        _circularSurfaceMovement.MoveOnPath(path, 0.2f);
+
+        await Task.Delay((int)(0.5 * 1000));
+
+        foreach (var item in detectedHealth)
+        {
+            AudioManager.Instance.Play(AudioManager.Instance.clipHitMarker);
+            item.TakeDamage(_dashDamage);
+            _dashVisual.OnHit(item);
+            await Task.Delay((int)(0.1 * 1000));
+        }
+
+        _dashVisual.OnDashEnd();
+        _circularSurfaceMovement.enabled = true;
+        _dashSequenceTask = null;
+    }
+
+    public int GetDetectionResolution()
+    {
+        return Mathf.Clamp((int)(_dashRange / 2), 2, 100);
     }
 
     private void OnDrawGizmos()
     {
         _circularSurfaceMovement = GetComponent<CircularSurfaceMovement>();
-        if(!_circularSurfaceMovement) return;
-        PathData[] path = _circularSurfaceMovement.GetPathOnDirection(_circularSurfaceMovement.Velocity.x, _dashRange, 10);
+        if (!_circularSurfaceMovement) return;
+        PathData[] path = _circularSurfaceMovement.GetPathOnVelocityDirection(_dashRange, GetDetectionResolution());
         if (path.Length == 0) return;
         // print("count : " + path.Length);
         // foreach (var item in path)
@@ -44,10 +96,13 @@ public class DashControler : MonoBehaviour
         Gizmos.DrawSphere(path[0].position, 1);
         Gizmos.color = Color.green;
         Gizmos.DrawSphere(path[path.Length - 1].position, 1);
-        for (int i = 0; i < path.Length - 1; i++)
+        for (int i = 1; i < path.Length; i++)
         {
             Gizmos.color = i % 2 == 0 ? Color.green : Color.yellow;
-            Gizmos.DrawLine(path[i].position, path[i + 1].position);
+            Gizmos.DrawLine(path[i].position, path[i - 1].position);
+
+            // Gizmos.color = i % 2 == 0 ? Color.green : Color.yellow;
+            Gizmos.DrawWireSphere(path[i].position, _detectionRadius);
         }
     }
 }

@@ -85,12 +85,10 @@ public abstract class CircularSurfaceMovement : MonoBehaviour
 
     private Task _dashSequenceTask;
 
-    public void MoveOnPath(float direction, float distance, float duration, out PathData[] path, int resolution = 10)
+    public void MoveOnPath(PathData[] path, float duration)
     {
-        path = null;
         if (_dashSequenceTask != null) return;
-        PathData[] paths = GetPathOnDirection(direction, distance, resolution);
-        _dashSequenceTask = MoveOnPathAnimation(paths, duration);
+        _dashSequenceTask = MoveOnPathAnimation(path, duration);
     }
 
     private async Task MoveOnPathAnimation(PathData[] path, float duration)
@@ -115,14 +113,14 @@ public abstract class CircularSurfaceMovement : MonoBehaviour
         _dashSequenceTask = null;
     }
 
-    public PathData[] GetPathOnDirection(float direction, float distance, int resolution)
+    public PathData[] GetPathOnVelocityDirection(float distance, int resolution)
     {
         // return new Vector3[] { };
         if (!planetSurface) return new PathData[] { };
 
         PathData[] path = new PathData[resolution];
         float startRad = _currentAngleRadian;
-        float endRad = _currentAngleRadian + ((distance / planetSurface.Radius) * -direction);
+        float endRad = _currentAngleRadian + ((distance / planetSurface.Radius) * -velocity.x);
         for (int i = 0; i < resolution; i++)
         {
             float pathTime = resolution > 1 ? i / (float)(resolution - 1) : 0f;
@@ -138,3 +136,6 @@ public abstract class CircularSurfaceMovement : MonoBehaviour
     }
 
 }
+
+
+
