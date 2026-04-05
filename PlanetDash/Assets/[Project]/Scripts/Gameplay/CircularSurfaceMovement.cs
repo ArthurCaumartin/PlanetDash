@@ -32,6 +32,7 @@ public abstract class CircularSurfaceMovement : MonoBehaviour
 
     protected virtual void Update()
     {
+        if (_dashSequenceTask != null) return;
         if (!planetSurface) return;
         _currentAngleRadian -= (velocity.x * _movementSpeed * Time.deltaTime) / planetSurface.Radius;
         ComputePosition(_currentAngleRadian);
@@ -84,25 +85,23 @@ public abstract class CircularSurfaceMovement : MonoBehaviour
 
     private Task _dashSequenceTask;
 
-    public void Dash(float direction, float distance, float duration, out PathData[] path)
+    public void MoveOnPath(float direction, float distance, float duration, out PathData[] path, int resolution = 10)
     {
         path = null;
         if (_dashSequenceTask != null) return;
-        PathData[] paths = GetPathOnDirection(direction, distance, 10);
-        _dashSequenceTask = DashSequence(paths, duration);
+        PathData[] paths = GetPathOnDirection(direction, distance, resolution);
+        _dashSequenceTask = MoveOnPathAnimation(paths, duration);
     }
 
-    private async Task DashSequence(PathData[] path, float duration)
+    private async Task MoveOnPathAnimation(PathData[] path, float duration)
     {
-        print("Start Dash Sequence");
-        enabled = false;
-        foreach (var item in path)
-            print("PathData : " + item.position + " // " + item.time);
+        // foreach (var item in path)
+            // print("PathData : " + item.position + " // " + item.time);
 
         int targetIndex = 1;
         for (float i = 0; i < duration; i += Time.deltaTime)
         {
-            print("Dash Time : " + i + " /// " + targetIndex);
+            // print("Dash Time : " + i + " /// " + targetIndex);
             float dashTime = i / duration;
             if (dashTime > path[targetIndex].time)
                 targetIndex++;
@@ -113,7 +112,6 @@ public abstract class CircularSurfaceMovement : MonoBehaviour
             await Task.Yield();
         }
         ComputeInitialeAngle();
-        enabled = true;
         _dashSequenceTask = null;
     }
 
