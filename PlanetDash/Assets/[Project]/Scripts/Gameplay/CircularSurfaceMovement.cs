@@ -1,5 +1,4 @@
-using System;
-using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public abstract class CircularSurfaceMovement : MonoBehaviour
@@ -16,9 +15,18 @@ public abstract class CircularSurfaceMovement : MonoBehaviour
     protected PlanetSurface planetSurface;
     protected bool isGrounded = false;
 
+    public Vector3 Velocity => velocity;
+
+
     protected virtual void Start()
     {
         planetSurface = PlanetUtils.GetNearest(transform.position);
+        ComputeInitialeAngle();
+    }
+
+    private void OnEnable()
+    {
+        if (!planetSurface) return;
         ComputeInitialeAngle();
     }
 
@@ -26,8 +34,7 @@ public abstract class CircularSurfaceMovement : MonoBehaviour
     {
         if (!planetSurface) return;
         _currentAngleRadian -= (velocity.x * _movementSpeed * Time.deltaTime) / planetSurface.Radius;
-        //* garentie le deplacement en m/s plutot qu'en deg/s
-        ComputePosition();
+        ComputePosition(_currentAngleRadian);
     }
 
     private void ComputeInitialeAngle()
@@ -38,11 +45,11 @@ public abstract class CircularSurfaceMovement : MonoBehaviour
                                                    planetSurface.transform.forward) * Mathf.Deg2Rad;
     }
 
-    private void ComputePosition()
+    private void ComputePosition(float radianAngle)
     {
         Vector3 newPosition = new Vector3(
-            Mathf.Cos(_currentAngleRadian),
-            Mathf.Sin(_currentAngleRadian),
+            Mathf.Cos(radianAngle),
+            Mathf.Sin(radianAngle),
             0
         );
 
@@ -75,24 +82,61 @@ public abstract class CircularSurfaceMovement : MonoBehaviour
         _altitude += 4;
     }
 
-    public Vector3[] GetPathOnDirection(float direction, float distance, int resolution)
+    private Task _dashSequenceTask;
+
+    public void Dash(float direction, float distance, float duration, out PathData[] path)
+    {
+        path = null;
+        if (_dashSequenceTask != null) return;
+        PathData[] paths = GetPathOnDirection(direction, distance, 10);
+        _dashSequenceTask = DashSequence(paths, duration);
+    }
+
+    private async Task DashSequence(PathData[] path, float duration)
+    {
+        print("Start Dash Sequence");
+        enabled = false;
+        foreach (var item in path)
+            print("PathData : " + item.position + " // " + item.time);
+
+        int targetIndex = 1;
+        for (float i = 0; i < duration; i += Time.deltaTime)
+        {
+            print("Dash Time : " + i + " /// " + targetIndex);
+            float dashTime = i / duration;
+            if (dashTime > path[targetIndex].time)
+                targetIndex++;
+
+            float travelTime = Mathf.InverseLerp(path[targetIndex - 1].time, path[targetIndex].time, dashTime);
+            transform.position = Vector3.Lerp(path[targetIndex - 1].position, path[targetIndex].position, travelTime);
+            transform.up = (transform.position - planetSurface.transform.position).normalized;
+            await Task.Yield();
+        }
+        ComputeInitialeAngle();
+        enabled = true;
+        _dashSequenceTask = null;
+    }
+
+    public PathData[] GetPathOnDirection(float direction, float distance, int resolution)
     {
         // return new Vector3[] { };
-        if (!planetSurface) return new Vector3[] { };
+        if (!planetSurface) return new PathData[] { };
 
-        Vector3[] path = new Vector3[resolution];
+        PathData[] path = new PathData[resolution];
         float startRad = _currentAngleRadian;
         float endRad = _currentAngleRadian + ((distance / planetSurface.Radius) * -direction);
         for (int i = 0; i < resolution; i++)
         {
-            float radTime = Mathf.Lerp(startRad, endRad, Mathf.InverseLerp(0, resolution, i));
+            float pathTime = resolution > 1 ? i / (float)(resolution - 1) : 0f;
+            float radTime = Mathf.Lerp(startRad, endRad, pathTime);
             Vector3 point = new Vector3(
                 Mathf.Cos(radTime),
                 Mathf.Sin(radTime),
                 0
             );
-            path[i] = (point * (_altitude + 2)) + planetSurface.transform.position;
+            path[i] = new PathData((point * _altitude) + planetSurface.transform.position, pathTime);
         }
         return path;
     }
+
 }
