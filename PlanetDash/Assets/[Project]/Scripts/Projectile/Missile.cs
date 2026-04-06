@@ -53,7 +53,7 @@ public class Missile : Projectile
         for (int i = 0; i < cols.Length; i++)
         {
             Health h = cols[i].GetComponent<Health>();
-            return h;
+            if (h) return h;
         }
         return null;
     }
