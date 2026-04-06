@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class DashVisual : MonoBehaviour
 {
-    [SerializeField] private DashControler _dashControler;
+    [SerializeField] private DashController _dashControler;
     [SerializeField] private TrailRenderer _trailFxHitSequence;
     [SerializeField] private TrailRenderer _trailFxDashTravel;
     private PathData[] _currentDashPath;
@@ -11,7 +11,7 @@ public class DashVisual : MonoBehaviour
 
     private void Start()
     {
-        _dashControler = GetComponent<DashControler>();
+        _dashControler = GetComponent<DashController>();
         
         _dashControler.onDashStart.AddListener(OnDashStart);
         _dashControler.onDashHit.AddListener(OnHit);

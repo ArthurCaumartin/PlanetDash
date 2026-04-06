@@ -5,7 +5,7 @@ using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 
-public class DashControler : MonoBehaviour
+public class DashController : MonoBehaviour
 {
     [SerializeField] private LayerMask _detectionLayer;
     [SerializeField] private float _coolDownDuration = 1f;
@@ -36,6 +36,7 @@ public class DashControler : MonoBehaviour
 
     private void OnDash(InputValue value)
     {
+        if(!enabled) return;
         if (_dashSequenceTask != null) return;
         if (value.Get<float>() > .5f && _coolDownTimer > _coolDownDuration)
         {
@@ -47,6 +48,7 @@ public class DashControler : MonoBehaviour
 
     private async Task DashSequence()
     {
+        //TODO split with small fct for bettre reading :)
         _circularSurfaceMovement.enabled = false;
         PathData[] path = _circularSurfaceMovement.GetPathOnVelocityDirection(_dashRange, GetDetectionResolution());
         List<Health> detectedHealth = new List<Health>();
