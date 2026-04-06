@@ -21,7 +21,7 @@ public class DashController : MonoBehaviour
     public UnityEvent<PathData[]> onDashStart;
     public UnityEvent<float> onDashMove;
     public UnityEvent onDashEnd;
-    public UnityEvent<Health> onDashHit;
+    public UnityEvent<Health, Health[]> onDashHit;
 
 
     private void Awake()
@@ -75,7 +75,7 @@ public class DashController : MonoBehaviour
         {
             AudioManager.Instance.Play(AudioManager.Instance.clipHitMarker);
             item.TakeDamage(_dashDamage);
-            onDashHit.Invoke(item);
+            onDashHit.Invoke(item, detectedHealth.ToArray());
             await Task.Delay((int)(0.1 * 1000));
         }
 
