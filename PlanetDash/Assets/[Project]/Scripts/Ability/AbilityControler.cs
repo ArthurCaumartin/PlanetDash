@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class AbilityControler : MonoBehaviour
 {
-    [SerializeField] private DashControler _dashControler;
+    [SerializeField] private DashController _dashControler;
     public IAbility abilityTest;
 
     void Start()
