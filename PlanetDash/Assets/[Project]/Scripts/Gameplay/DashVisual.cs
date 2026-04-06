@@ -9,6 +9,14 @@ public class DashVisual : MonoBehaviour
     private TrailRenderer _trailHitSequenceInstance;
     private TrailRenderer _trailDashTravelInstance;
 
+    private void Start()
+    {
+        _dashControler = GetComponent<DashControler>();
+        
+        _dashControler.onDashStart.AddListener(OnDashStart);
+        _dashControler.onDashHit.AddListener(OnHit);
+        _dashControler.onDashEnd.AddListener(OnDashEnd);
+    }
 
     public void OnDashStart(PathData[] path)
     {

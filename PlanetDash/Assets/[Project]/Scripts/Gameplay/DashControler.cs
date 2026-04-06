@@ -1,13 +1,12 @@
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 
 public class DashControler : MonoBehaviour
 {
-    [SerializeField] private DashVisual _dashVisual;
     [SerializeField] private LayerMask _detectionLayer;
     [SerializeField] private float _coolDownDuration = 1f;
     [SerializeField] private float _dashDamage = 50f;
@@ -19,10 +18,15 @@ public class DashControler : MonoBehaviour
 
     public float DetectionRadius => _detectionRadius;
 
+    public UnityEvent<PathData[]> onDashStart;
+    public UnityEvent<float> onDashMove;
+    public UnityEvent onDashEnd;
+    public UnityEvent<Health> onDashHit;
+
+
     private void Awake()
     {
         _circularSurfaceMovement = GetComponent<CircularSurfaceMovement>();
-        _dashVisual = GetComponent<DashVisual>();
     }
 
     private void Update()
@@ -47,10 +51,12 @@ public class DashControler : MonoBehaviour
         PathData[] path = _circularSurfaceMovement.GetPathOnVelocityDirection(_dashRange, GetDetectionResolution());
         List<Health> detectedHealth = new List<Health>();
 
+        onDashStart.Invoke(path);
+
         for (int i = 1; i < path.Length; i++)
         {
             Collider2D[] cols = Physics2D.OverlapCircleAll(path[i].position, _detectionRadius, _detectionLayer);
-            print(i + " : " + cols.Length);
+            // print(i + " : " + cols.Length);
             foreach (var item in cols)
             {
                 Health h = item.GetComponent<Health>();
@@ -58,10 +64,8 @@ public class DashControler : MonoBehaviour
             }
         }
 
-        print("DetectedHealth : " + detectedHealth.Count);
 
-        _dashVisual.OnDashStart(path);
-        _circularSurfaceMovement.MoveOnPath(path, 0.2f);
+        _circularSurfaceMovement.MoveOnPath(path, 0.2f, (movementTime) => onDashMove.Invoke(movementTime));
 
         await Task.Delay((int)(0.5 * 1000));
 
@@ -69,11 +73,11 @@ public class DashControler : MonoBehaviour
         {
             AudioManager.Instance.Play(AudioManager.Instance.clipHitMarker);
             item.TakeDamage(_dashDamage);
-            _dashVisual.OnHit(item);
+            onDashHit.Invoke(item);
             await Task.Delay((int)(0.1 * 1000));
         }
 
-        _dashVisual.OnDashEnd();
+        onDashEnd.Invoke();
         _circularSurfaceMovement.enabled = true;
         _dashSequenceTask = null;
     }
