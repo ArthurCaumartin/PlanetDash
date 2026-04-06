@@ -7,11 +7,11 @@ public abstract class CircularSurfaceMovement : MonoBehaviour
     [SerializeField] private float _movementSpeed = 1;
     [SerializeField] private float _jumpDuration = 0.5f;
     [SerializeField] private float _gravityScale = 1;
-    private float _currentAngleRadian;
     private float _altitude;
     private Task _dashSequenceTask;
 
 
+    protected float currentAngleRadian;
     protected Vector2 velocity;
     protected PlanetSurface planetSurface;
     protected bool isGrounded = false;
@@ -22,13 +22,13 @@ public abstract class CircularSurfaceMovement : MonoBehaviour
     protected virtual void Start()
     {
         planetSurface = PlanetUtils.GetNearest(transform.position);
-        ComputeInitialeAngle();
+        ComputeInitialeAngleAndAltitude();
     }
 
     private void OnEnable()
     {
         if (!planetSurface) return;
-        ComputeInitialeAngle();
+        ComputeInitialeAngleAndAltitude();
     }
 
     protected virtual void Update()
@@ -38,20 +38,21 @@ public abstract class CircularSurfaceMovement : MonoBehaviour
 
         // Negative sign reverses tangential direction
         // decrease angle = move right / increase angle = move left
-        _currentAngleRadian -= (velocity.x * _movementSpeed * Time.deltaTime) / planetSurface.Radius;
-        ComputePosition(_currentAngleRadian);
+        currentAngleRadian -= (velocity.x * _movementSpeed * Time.deltaTime) / planetSurface.Radius;
+        ComputePosition(currentAngleRadian);
     }
 
 
-    private void ComputeInitialeAngle()
+    protected void ComputeInitialeAngleAndAltitude()
     {
+        _altitude = planetSurface.Radius + (Vector3.Distance(transform.position, planetSurface.transform.position) - planetSurface.Radius);
         Vector3 dirSurfaceToThis = (transform.position - planetSurface.transform.position).normalized;
-        _currentAngleRadian = -Vector3.SignedAngle(dirSurfaceToThis,
+        currentAngleRadian = -Vector3.SignedAngle(dirSurfaceToThis,
                                                    planetSurface.transform.right,
                                                    planetSurface.transform.forward) * Mathf.Deg2Rad;
     }
 
-    private void ComputePosition(float radianAngle)
+    protected void ComputePosition(float radianAngle)
     {
         Vector3 newPosition = new Vector3(
             Mathf.Cos(radianAngle),
@@ -85,7 +86,7 @@ public abstract class CircularSurfaceMovement : MonoBehaviour
     public void SetSurface(PlanetSurface surface)
     {
         planetSurface = surface;
-        ComputeInitialeAngle();
+        ComputeInitialeAngleAndAltitude();
     }
 
     public void MoveOnPath(PathData[] path, float duration, Action<float> toDoOnMove = null)
@@ -112,7 +113,7 @@ public abstract class CircularSurfaceMovement : MonoBehaviour
             toDoOnMove?.Invoke(dashTime);
             await Task.Yield();
         }
-        ComputeInitialeAngle();
+        ComputeInitialeAngleAndAltitude();
         _dashSequenceTask = null;
     }
 
@@ -121,11 +122,11 @@ public abstract class CircularSurfaceMovement : MonoBehaviour
         if (!planetSurface) return new PathData[] { };
 
         PathData[] path = new PathData[resolution];
-        float startRad = _currentAngleRadian;
+        float startRad = currentAngleRadian;
 
         // Negative sign reverses tangential direction
         // decrease angle = move right / increase angle = move left
-        float endRad = _currentAngleRadian + ((distance / planetSurface.Radius) * -velocity.x);
+        float endRad = currentAngleRadian + ((distance / planetSurface.Radius) * -velocity.x);
 
         for (int i = 0; i < resolution; i++)
         {
