@@ -1,20 +1,38 @@
 
-using UnityEditor;
+using System;
 using UnityEngine;
 
+[Serializable]
 public class Ability_Missile : AbilityDecorator
 {
-    public Ability_Missile(IAbility ability) : base(ability) { }
+    private Missile _missilePrefab;
+    public float damage;
+    public int missileCount;
+
+    public Ability_Missile(IAbility ability, Missile missilePrefab) : base(ability)
+    {
+        Debug.Log("Construct Ability Missile !");
+        _missilePrefab = missilePrefab;
+    }
+
+    public void SetStat(float damage, int missileCount)
+    {
+        this.damage = damage;
+        this.missileCount = missileCount;
+    }
 
     public override void OnDashHit(Health healthHit, Health[] healthsHitArray)
     {
         base.OnDashHit(healthHit, healthsHitArray);
-        //TODO horrible de get la ref avec un LoadAsset o_O A CHANGER !!!! (je sais pas comment...)
-        GameObject mRef = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/[Project]/Prefabs/Projectiles/Missile.prefab");
-        for (int i = 0; i < 10; i++)
+
+        for (int i = 0; i < missileCount; i++)
         {
-            GameObject m = GameObject.Instantiate(mRef, healthHit.transform.position + healthHit.transform.up, healthHit.transform.rotation);
-            m.GetComponent<Missile>().Init(healthsHitArray.GetRandome(), 50, 10, 150, 3);
+            Missile m = GameObject.Instantiate(_missilePrefab,
+                                            healthHit.transform.position + healthHit.transform.up,
+                                            healthHit.transform.rotation
+            );
+
+            m.Init(healthsHitArray.GetRandome(), 50, 10, 150, 3);
         }
     }
 }
