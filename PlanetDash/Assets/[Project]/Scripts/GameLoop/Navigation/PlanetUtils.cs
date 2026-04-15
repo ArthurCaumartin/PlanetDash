@@ -12,7 +12,7 @@ public static class PlanetUtils
         //     return;
         _surfaceList = null;
         _surfaceList = GameObject.FindObjectsByType<PlanetSurface>(FindObjectsSortMode.None).ToList();
-        Debug.Log("Planet fetch count : " + _surfaceList.Count);
+        // Debug.Log("Planet fetch count : " + _surfaceList.Count);
     }
 
     public static PlanetSurface GetNearest(Vector3 position)

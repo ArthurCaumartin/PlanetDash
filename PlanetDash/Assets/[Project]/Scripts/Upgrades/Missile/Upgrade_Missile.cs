@@ -9,7 +9,7 @@ public class Upgrade_Missile : ScriptableUpgrade
 
     public override IAbility Decorate(IAbility ability)
     {
-        Debug.Log("Decorate with missile.");
+        // Debug.Log("Decorate with missile.");
         return new Ability_Missile(ability, _missilePrefab);
     }
 }
