@@ -5,7 +5,7 @@ public class AbilityControler : MonoBehaviour
 {
     [SerializeField] private List<ScriptableUpgrade> _startUpgradeList = new List<ScriptableUpgrade>();
     [SerializeField] private DashController _dashControler;
-    public IAbility abilityTest;
+    [SerializeField] public AbilityDecorator abilityTest;
 
     private void Start()
     {
@@ -17,7 +17,7 @@ public class AbilityControler : MonoBehaviour
         _startUpgradeList = upgradeList;
         if (abilityTest != null)
             UnSubAbilityToEvents(abilityTest);
-        abilityTest = ComposeAbility();
+        abilityTest = ComposeAbility() as AbilityDecorator;
         SubAbilityToEvents(abilityTest);
     }
 
@@ -25,7 +25,8 @@ public class AbilityControler : MonoBehaviour
     {
         IAbility ability = new BaseAbility();
         int prioCount = EnumUtils.MaxIntValue<UpgradePriority>();
-        for (int i = 0; i < prioCount; i++)
+        // print("PrioCount : " + prioCount);
+        for (int i = 0; i <= prioCount; i++)
             ability = ComposeForPriority(i, ability);
         return ability;
     }
@@ -40,7 +41,7 @@ public class AbilityControler : MonoBehaviour
 
             if (upgradePrio == priority)
             {
-                print(item.name + " upgradePrio : " + upgradePrio);
+                // print(item.name + " Apply //" + upgradePrio);
                 ability = item.Decorate(ability);
                 item.ApplyStatChange(ability);
             }
