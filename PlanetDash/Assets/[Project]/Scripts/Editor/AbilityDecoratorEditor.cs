@@ -92,7 +92,8 @@ public class AbilityDecoratorEditor : PropertyDrawer
 
         if (type == typeof(LayerMask))
         {
-            EditorGUI.LayerField(rectLabel, name, (LayerMask)fieldInfo.GetValue(decoratorInstance));
+            //TODO make mask to index conversion for LayerField display
+            // EditorGUI.LayerField(rectLabel, name, (LayerMask)fieldInfo.GetValue(decoratorInstance));
         }
 
         if (typeof(UnityEngine.Object).IsAssignableFrom(type))
