@@ -6,6 +6,8 @@ public abstract class Projectile : MonoBehaviour
     protected float damage = 50;
     protected Vector3 lastFramePosition;
 
+    public LayerMask LayerMask => layerMask;
+
     protected virtual void Start() { }
     protected virtual void Update() { }
     protected virtual void LateUpdate()
@@ -29,8 +31,11 @@ public abstract class Projectile : MonoBehaviour
         {
             if (!hits[i].collider) continue;
             Health h = hits[i].collider.GetComponent<Health>();
-            h?.TakeDamage(damage);
+            if (h)
+            {
+                h.TakeDamage(damage);
+                Destroy(gameObject);
+            }
         }
-        Destroy(gameObject);
     }
 }
