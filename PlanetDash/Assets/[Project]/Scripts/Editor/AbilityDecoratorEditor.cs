@@ -68,7 +68,7 @@ public class AbilityDecoratorEditor : PropertyDrawer
     {
         string name = fieldInfo.Name;
         Type type = fieldInfo.FieldType;
-        Debug.Log("type : " + type.ToString());
+        // Debug.Log("type : " + type.ToString());
 
         Rect rectLabel = new Rect(rect.x + 20, rect.y, rect.width - 20, rect.height);
         // Rect rectType = new Rect(rect.x + 150, rect.y, rect.width, rect.height);
@@ -98,7 +98,6 @@ public class AbilityDecoratorEditor : PropertyDrawer
 
         if (typeof(UnityEngine.Object).IsAssignableFrom(type))
         {
-            Debug.Log("Mono object field");
             EditorGUI.ObjectField(rectLabel, name, (UnityEngine.Object)fieldInfo.GetValue(decoratorInstance), type, true);
         }
 
@@ -106,7 +105,7 @@ public class AbilityDecoratorEditor : PropertyDrawer
 
     public List<TypeFieldInfoContainer> GetMemberContainers(object targetObject)
     {
-        Debug.Log("targetObj : " + targetObject.GetInheranceCompo(true));
+        // Debug.Log("targetObj : " + targetObject.GetInheranceCompo(true));
         object value = fieldInfo.GetValue(targetObject);
         List<Type> types = value.GetInheranceCompo();
         types.RemoveAll(obj => obj == typeof(System.Object));
