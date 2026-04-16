@@ -1,16 +1,19 @@
 using System;
 using System.Threading.Tasks;
+using UnityEditor;
 using UnityEngine;
 
 public abstract class CircularSurfaceMovement : MonoBehaviour
 {
     [SerializeField] private float _movementSpeed = 1;
     [SerializeField] private float _jumpDuration = 0.5f;
+    [SerializeField] private float _jumpHeight = 5;
+    [SerializeField] private float _fallingSpeed = 5;
     [SerializeField] private float _gravityScale = 1;
     private float _altitude;
     private Task _dashSequenceTask;
-
-
+    private Task _jumpTask;
+    private float _currentFallingSpeed = 1;
     protected float currentAngleRadian;
     protected Vector2 velocity;
     protected PlanetSurface planetSurface;
@@ -62,13 +65,19 @@ public abstract class CircularSurfaceMovement : MonoBehaviour
 
         if (_altitude < planetSurface.Radius + 0.01)
         {
-            _altitude = planetSurface.Radius;
             isGrounded = true;
+            _currentFallingSpeed = 1;
+            if (_jumpTask == null)
+                _altitude = planetSurface.Radius;
         }
         else
         {
             isGrounded = false;
-            _altitude -= Time.deltaTime * _gravityScale;
+            if (_jumpTask == null)
+            {
+                _currentFallingSpeed += Time.deltaTime * _fallingSpeed;
+                _altitude -= Time.deltaTime * _gravityScale * _currentFallingSpeed;
+            }
         }
 
         newPosition *= _altitude;
@@ -79,8 +88,8 @@ public abstract class CircularSurfaceMovement : MonoBehaviour
 
     protected void Jump()
     {
-        if (!isGrounded) return;
-        _altitude += 4;
+        if (!isGrounded || _jumpTask != null) return;
+        _jumpTask = JumpAnimation(_jumpDuration, _jumpHeight);
     }
 
     public void SetSurface(PlanetSurface surface)
@@ -95,8 +104,24 @@ public abstract class CircularSurfaceMovement : MonoBehaviour
         _dashSequenceTask = MoveOnPathAnimation(path, duration, toDoOnMove);
     }
 
+    private async Task JumpAnimation(float duration, float height)
+    {
+        float startHeight = _altitude;
+        float target = _altitude + height;
+        float time = 0;
+        while (time < duration)
+        {
+            time += Time.deltaTime;
+            _altitude = Mathf.Lerp(startHeight, target, Mathf.InverseLerp(0, duration, time));
+            await Task.Yield();
+        }
+        _jumpTask = null;
+    }
+
     private async Task MoveOnPathAnimation(PathData[] path, float duration, Action<float> toDoOnMove = null)
     {
+        _jumpTask = null;
+
         int targetIndex = 1;
         for (float i = 0; i < duration; i += Time.deltaTime)
         {
