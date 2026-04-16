@@ -31,12 +31,13 @@ public class DashController : MonoBehaviour
 
     private void Update()
     {
-        _coolDownTimer += Time.deltaTime;
+        if (_dashSequenceTask == null)
+            _coolDownTimer += Time.deltaTime;
     }
 
     private void OnDash(InputValue value)
     {
-        if(!enabled) return;
+        if (!enabled) return;
         if (_dashSequenceTask != null) return;
         if (value.Get<float>() > .5f && _coolDownTimer > _coolDownDuration)
         {
@@ -65,7 +66,6 @@ public class DashController : MonoBehaviour
                 if (h && !detectedHealth.Contains(h)) detectedHealth.Add(h);
             }
         }
-
 
         _circularSurfaceMovement.MoveOnPath(path, 0.2f, (movementTime) => onDashMove.Invoke(movementTime));
 
