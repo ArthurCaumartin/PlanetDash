@@ -2,26 +2,24 @@ using UnityEngine;
 
 public class Missile : Projectile
 {
-    protected Health target;
+    protected Damagable target;
     protected float speed = 10;
     protected float trakingSpeed = 3;
     protected float explosionRange = 3;
 
 
-    public virtual Projectile Init(Health target,
+    public virtual Projectile Init(Damagable target,
                                    float damage,
                                    float speed,
                                    float trakingSpeed,
                                    float explosionRange)
     {
+        base.Init(damage);
         this.target = target;
         this.damage = damage;
         this.speed = speed;
         this.trakingSpeed = trakingSpeed;
         this.explosionRange = explosionRange;
-
-        lastFramePosition = transform.position;
-
         return this;
     }
 
@@ -46,13 +44,13 @@ public class Missile : Projectile
         TryDetectDamagable();
     }
 
-    private Health TryDetectNewTarget()
+    private Damagable TryDetectNewTarget()
     {
         Collider2D[] cols = Physics2D.OverlapCircleAll(transform.position, 10);
         if (cols.Length == 0) return null;
         for (int i = 0; i < cols.Length; i++)
         {
-            Health h = cols[i].GetComponent<Health>();
+            Damagable h = cols[i].GetComponent<Damagable>();
             if (h) return h;
         }
         return null;

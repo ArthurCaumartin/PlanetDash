@@ -30,9 +30,9 @@ public class DashVisual : MonoBehaviour
         _trailDashTravelInstance.widthCurve = new AnimationCurve(new Keyframe[] { new Keyframe(0, radius), new Keyframe(1, radius) });
     }
 
-    public void OnHit(Health healthHit, Health[] healthsHitArray)
+    public void OnHit(Damagable damagableHit, Damagable[] damagableHitArray)
     {
-        _trailHitSequenceInstance.transform.position = healthHit.transform.position;
+        _trailHitSequenceInstance.transform.position = damagableHit.transform.position;
     }
 
     public void OnDashEnd()

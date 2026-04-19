@@ -30,7 +30,7 @@ public abstract class Projectile : MonoBehaviour
         for (int i = 0; i < hits.Length; i++)
         {
             if (!hits[i].collider) continue;
-            Health h = hits[i].collider.GetComponent<Health>();
+            Damagable h = hits[i].collider.GetComponent<Damagable>();
             if (h)
             {
                 h.TakeDamage(damage);

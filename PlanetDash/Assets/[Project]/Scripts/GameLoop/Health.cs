@@ -1,11 +1,9 @@
-using UnityEngine;
-
-public class Health : MonoBehaviour
+public class Health : Damagable
 {
     public float _maxHealth = 100;
     public float _currentHealth = 100;
 
-    public virtual void TakeDamage(float amount)
+    public override void TakeDamage(float amount)
     {
         _currentHealth -= amount;
         if (_currentHealth <= 0)

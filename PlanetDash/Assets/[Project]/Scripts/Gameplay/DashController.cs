@@ -21,7 +21,7 @@ public class DashController : MonoBehaviour
     public UnityEvent<PathData[]> onDashStart;
     public UnityEvent<float> onDashMove;
     public UnityEvent onDashEnd;
-    public UnityEvent<Health, Health[]> onDashHit;
+    public UnityEvent<Damagable, Damagable[]> onDashHit;
 
 
     private void Awake()
@@ -52,7 +52,7 @@ public class DashController : MonoBehaviour
         //TODO split with small fct for bettre reading :)
         _circularSurfaceMovement.enabled = false;
         PathData[] path = _circularSurfaceMovement.GetPathOnVelocityDirection(_dashRange, GetDetectionResolution());
-        List<Health> detectedHealth = new List<Health>();
+        List<Damagable> detectedDamagable = new List<Damagable>();
 
         onDashStart.Invoke(path);
 
@@ -62,8 +62,8 @@ public class DashController : MonoBehaviour
             // print(i + " : " + cols.Length);
             foreach (var item in cols)
             {
-                Health h = item.GetComponent<Health>();
-                if (h && !detectedHealth.Contains(h)) detectedHealth.Add(h);
+                Damagable dmgDetect = item.GetComponent<Damagable>();
+                if (dmgDetect && !detectedDamagable.Contains(dmgDetect)) detectedDamagable.Add(dmgDetect);
             }
         }
 
@@ -71,11 +71,11 @@ public class DashController : MonoBehaviour
 
         await Task.Delay((int)(0.5 * 1000));
 
-        foreach (var item in detectedHealth)
+        foreach (var item in detectedDamagable)
         {
             AudioManager.Instance.Play(AudioManager.Instance.clipHitMarker);
             item.TakeDamage(_dashDamage);
-            onDashHit.Invoke(item, detectedHealth.ToArray());
+            onDashHit.Invoke(item, detectedDamagable.ToArray());
             await Task.Delay((int)(0.1 * 1000));
         }
 

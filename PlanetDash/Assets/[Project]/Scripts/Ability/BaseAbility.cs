@@ -15,7 +15,7 @@ public class BaseAbility : IAbility
         // Debug.Log("Ability / Dash Move : " + movementTime);
     }
 
-    public void OnDashHit(Health healthHit, Health[] healthsHitArray)
+    public void OnDashHit(Damagable damagableHit, Damagable[] damagableHitsArray)
     {
         // Debug.Log("Ability / Dash hit : " + healthHit.name);
     }
