@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 
 public class DashController : MonoBehaviour
 {
+    [SerializeField] private DebugCondition _debug;
     [SerializeField] private LayerMask _detectionLayer;
     [SerializeField] private float _coolDownDuration = 1f;
     [SerializeField] private float _dashDamage = 50f;
@@ -85,6 +86,7 @@ public class DashController : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+        if(!_debug.enable) return;
         _circularSurfaceMovement = GetComponent<CircularSurfaceMovement>();
         if (!_circularSurfaceMovement) return;
         PathData[] path = _circularSurfaceMovement.GetPathOnVelocityDirection(_dashRange, GetDetectionResolution());

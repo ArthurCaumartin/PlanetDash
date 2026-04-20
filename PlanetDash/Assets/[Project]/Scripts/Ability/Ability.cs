@@ -1,8 +1,14 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public abstract class Ability : MonoBehaviour
 {
+    protected DashController dashController;
+
+    public virtual void Init(DashController dashController)
+    {
+        this.dashController = dashController;
+    }
+
     protected virtual void Update()
     {
 

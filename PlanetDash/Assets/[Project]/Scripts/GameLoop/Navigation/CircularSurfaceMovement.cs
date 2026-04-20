@@ -42,7 +42,7 @@ public abstract class CircularSurfaceMovement : MonoBehaviour
         // Negative sign reverses tangential direction
         // decrease angle = move right / increase angle = move left
         currentAngleRadian -= (velocity.x * _movementSpeed * Time.deltaTime) / planetSurface.Radius;
-        ComputePosition(currentAngleRadian);
+        ComputePositionAndRotation(currentAngleRadian);
     }
 
 
@@ -55,7 +55,7 @@ public abstract class CircularSurfaceMovement : MonoBehaviour
                                                    planetSurface.transform.forward) * Mathf.Deg2Rad;
     }
 
-    protected void ComputePosition(float radianAngle)
+    protected void ComputePositionAndRotation(float radianAngle)
     {
         Vector3 newPosition = new Vector3(
             Mathf.Cos(radianAngle),
@@ -83,7 +83,12 @@ public abstract class CircularSurfaceMovement : MonoBehaviour
         newPosition *= _altitude;
         newPosition += planetSurface.transform.position;
         transform.position = newPosition;
-        transform.up = (transform.position - planetSurface.transform.position).normalized;
+
+        if (velocity.x != 0)
+        {
+            Vector3 surfaceNormal = (transform.position - planetSurface.transform.position).normalized;
+            transform.rotation = Quaternion.LookRotation(Vector3.forward * velocity.x, surfaceNormal);
+        }
     }
 
     protected void Jump()
