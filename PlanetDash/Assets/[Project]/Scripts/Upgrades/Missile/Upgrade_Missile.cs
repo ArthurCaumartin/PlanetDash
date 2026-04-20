@@ -2,6 +2,7 @@
 using UnityEngine;
 
 [UpgradePriority(UpgradePriority.Base)]
+[UpgradeFamilyAtribute(UpgradeFamily.Missile)]
 [CreateAssetMenu(fileName = "Missile_Unlock", menuName = "Mwa/Upgrade/Missile/Missile Base Upgrade")]
 public class Upgrade_Missile : ScriptableUpgrade
 {

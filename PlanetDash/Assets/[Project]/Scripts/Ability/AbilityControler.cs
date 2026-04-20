@@ -6,6 +6,7 @@ public class AbilityControler : MonoBehaviour
     [SerializeField] private List<ScriptableUpgrade> _startUpgradeList = new List<ScriptableUpgrade>();
     [SerializeField] private DashController _dashControler;
     [SerializeField] public AbilityDecorator abilityTest;
+    // [SerializeField] private IAbility[] abilities;
 
     private void Start()
     {
@@ -33,17 +34,19 @@ public class AbilityControler : MonoBehaviour
 
     private IAbility ComposeForPriority(int priority, IAbility ability)
     {
-        foreach (var item in _startUpgradeList)
+        foreach (ScriptableUpgrade upgrade in _startUpgradeList)
         {
-            int upgradePrio = UpgradePriorityReader.GetPriority(item);
+            int upgradePrio = upgrade.GetPriority();
             if (upgradePrio == -1)
+            {
+                Debug.LogError(upgrade.name + " / NO PRIO DEFINE !!!");
                 continue;
+            }
 
             if (upgradePrio == priority)
             {
                 // print(item.name + " Apply //" + upgradePrio);
-                ability = item.Decorate(ability);
-                item.ApplyStatChange(ability);
+                upgrade.ApplyStatChange(ability);
             }
         }
         return ability;

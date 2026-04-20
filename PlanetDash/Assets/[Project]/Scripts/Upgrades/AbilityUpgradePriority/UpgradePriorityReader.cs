@@ -5,15 +5,15 @@ using Object = UnityEngine.Object;
 
 public static class UpgradePriorityReader
 {
-    public static int GetPriority(Object upgrade)
+    public static int GetPriority<T>(this T upgrade) where T : ScriptableUpgrade
     {
         Type t = upgrade.GetType();
         UpgradePriorityAttribute attribute =
-        t.GetCustomAttribute<UpgradePriorityAttribute>(inherit: false);
+        t.GetCustomAttribute<UpgradePriorityAttribute>(false);
         if (attribute == null)
         {
             Debug.LogError(upgrade.name + " no attribute found !");
-            return -1;
+            return (int)UpgradePriority.None;
         }
 
         return (int)attribute.Priority;
