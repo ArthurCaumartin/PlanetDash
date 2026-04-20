@@ -18,6 +18,7 @@ public class Ability_Katana : Ability
 
     protected override void Update()
     {
+        if(dashController.IsDashing) return;
         base.Update();
         _attackTimer += Time.deltaTime;
         if (_attackTimer > 1 / _attackPreSecond)
