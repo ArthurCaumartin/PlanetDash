@@ -2,10 +2,12 @@ using UnityEngine;
 
 public abstract class Ability : MonoBehaviour
 {
+    protected ScriptablePlayerData playerData;
     protected DashController dashController;
 
-    public virtual void Init(DashController dashController)
+    public virtual void Init(ScriptablePlayerData playerData, DashController dashController)
     {
+        this.playerData = playerData;
         this.dashController = dashController;
     }
 
