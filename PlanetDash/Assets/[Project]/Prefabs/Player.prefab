@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2982139151648993862}
   - component: {fileID: 2384093673219517316}
   - component: {fileID: 5449854770251566521}
+  - component: {fileID: 4565272368876250975}
   - component: {fileID: 7733666700120427334}
   m_Layer: 0
   m_Name: Player
@@ -36,6 +37,7 @@ Transform:
   m_Children:
   - {fileID: 6864116336951145957}
   - {fileID: 2213446251629737985}
+  - {fileID: 8688233578603258554}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7222700384172736008
@@ -81,7 +83,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _movementSpeed: 5
-  _jumpDuration: 0.5
+  _jumpDuration: 0.1
+  _jumpHeight: 5
+  _fallingSpeed: 5
   _gravityScale: 9
   _inputDirection: {x: 1, y: 0}
 --- !u!114 &2384093673219517316
@@ -103,18 +107,6 @@ MonoBehaviour:
   _dashDamage: 50
   _dashRange: 30
   _detectionRadius: 6
-  onDashStart:
-    m_PersistentCalls:
-      m_Calls: []
-  onDashMove:
-    m_PersistentCalls:
-      m_Calls: []
-  onDashEnd:
-    m_PersistentCalls:
-      m_Calls: []
-  onDashHit:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &5449854770251566521
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -130,6 +122,23 @@ MonoBehaviour:
   _dashControler: {fileID: 2384093673219517316}
   _trailFxHitSequence: {fileID: 3295331366964603239, guid: fc855beb144af12429e2057f6f2fc387, type: 3}
   _trailFxDashTravel: {fileID: 4953998086710148999, guid: ed4d75a1bd508ab4486700e285f1ff52, type: 3}
+--- !u!114 &4565272368876250975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3814117965645349341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3674a51ed8ac64d489bb4022e58c00ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _abilityControler: {fileID: 7733666700120427334}
+  _startUpgrade:
+  - {fileID: 11400000, guid: 4b8425510a8fdd6489cf3a12cd1b1710, type: 2}
+  - {fileID: 11400000, guid: 4b8425510a8fdd6489cf3a12cd1b1710, type: 2}
+  _upgradeList: []
 --- !u!114 &7733666700120427334
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -142,7 +151,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aaa95d93771f67347898eb4fdc021b1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dashControler: {fileID: 2384093673219517316}
+  _abilityContainer: {fileID: 8688233578603258554}
+  _abilityList: []
 --- !u!1 &5919425630702789639
 GameObject:
   m_ObjectHideFlags: 0
@@ -364,3 +374,34 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!1 &7546674866547983813
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8688233578603258554}
+  m_Layer: 0
+  m_Name: AbilityContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8688233578603258554
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7546674866547983813}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1085214685123693837}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

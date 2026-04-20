@@ -133,6 +133,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _movementSpeed: 1
   _jumpDuration: 0.5
+  _jumpHeight: 5
+  _fallingSpeed: 5
   _gravityScale: 1
 --- !u!114 &3664274750707345415
 MonoBehaviour:
@@ -146,8 +148,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35fb51f5a19265b499fd92863d1685b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxHealth: 100
-  _currentHealth: 100
+  _maxHealth: 50
+  _currentHealth: 50
 --- !u!58 &929969179476190125
 CircleCollider2D:
   m_ObjectHideFlags: 0

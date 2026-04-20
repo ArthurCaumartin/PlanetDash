@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 
@@ -17,11 +16,6 @@ public class DashController : MonoBehaviour
     private Task _dashSequenceTask = null;
 
     public float DetectionRadius => _detectionRadius;
-
-    public UnityEvent<PathData[]> onDashStart;
-    public UnityEvent<float> onDashMove;
-    public UnityEvent onDashEnd;
-    public UnityEvent<Damagable, Damagable[]> onDashHit;
 
 
     private void Awake()
@@ -54,7 +48,7 @@ public class DashController : MonoBehaviour
         PathData[] path = _circularSurfaceMovement.GetPathOnVelocityDirection(_dashRange, GetDetectionResolution());
         List<Damagable> detectedDamagable = new List<Damagable>();
 
-        onDashStart.Invoke(path);
+        GameplayEvent.OnDashStart.Invoke(path);
 
         for (int i = 1; i < path.Length; i++)
         {
@@ -67,7 +61,7 @@ public class DashController : MonoBehaviour
             }
         }
 
-        _circularSurfaceMovement.MoveOnPath(path, 0.2f, (movementTime) => onDashMove.Invoke(movementTime));
+        _circularSurfaceMovement.MoveOnPath(path, 0.2f, (movementTime) => GameplayEvent.OnDashMove.Invoke(movementTime));
 
         await Task.Delay((int)(0.5 * 1000));
 
@@ -75,11 +69,11 @@ public class DashController : MonoBehaviour
         {
             AudioManager.Instance.Play(AudioManager.Instance.clipHitMarker);
             item.TakeDamage(_dashDamage);
-            onDashHit.Invoke(item, detectedDamagable.ToArray());
+            GameplayEvent.OnDashHit.Invoke(item);
             await Task.Delay((int)(0.1 * 1000));
         }
 
-        onDashEnd.Invoke();
+        GameplayEvent.OnDashEnd.Invoke();
         _circularSurfaceMovement.enabled = true;
         _dashSequenceTask = null;
     }

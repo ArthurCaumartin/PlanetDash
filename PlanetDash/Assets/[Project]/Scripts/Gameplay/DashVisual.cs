@@ -12,10 +12,6 @@ public class DashVisual : MonoBehaviour
     private void Start()
     {
         _dashControler = GetComponent<DashController>();
-        
-        _dashControler.onDashStart.AddListener(OnDashStart);
-        _dashControler.onDashHit.AddListener(OnHit);
-        _dashControler.onDashEnd.AddListener(OnDashEnd);
     }
 
     public void OnDashStart(PathData[] path)
@@ -30,7 +26,7 @@ public class DashVisual : MonoBehaviour
         _trailDashTravelInstance.widthCurve = new AnimationCurve(new Keyframe[] { new Keyframe(0, radius), new Keyframe(1, radius) });
     }
 
-    public void OnHit(Damagable damagableHit, Damagable[] damagableHitArray)
+    public void OnHit(Damagable damagableHit)
     {
         _trailHitSequenceInstance.transform.position = damagableHit.transform.position;
     }
@@ -41,4 +37,29 @@ public class DashVisual : MonoBehaviour
         if (_trailDashTravelInstance) Destroy(_trailDashTravelInstance);
     }
 
+
+    protected virtual void OnEnable()
+    {
+        UnsubToGameplayEvent();
+        SubToGameplayEvent();
+    }
+
+    protected virtual void OnDisable()
+    {
+        UnsubToGameplayEvent();
+    }
+
+    private void SubToGameplayEvent()
+    {
+        GameplayEvent.OnDashStart.AddListener(OnDashStart);
+        GameplayEvent.OnDashEnd.AddListener(OnDashEnd);
+        GameplayEvent.OnDashHit.AddListener(OnHit);
+    }
+
+    private void UnsubToGameplayEvent()
+    {
+        GameplayEvent.OnDashStart.RemoveListener(OnDashStart);
+        GameplayEvent.OnDashEnd.RemoveListener(OnDashEnd);
+        GameplayEvent.OnDashHit.RemoveListener(OnHit);
+    }
 }

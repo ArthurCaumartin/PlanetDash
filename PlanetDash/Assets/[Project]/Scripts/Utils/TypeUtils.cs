@@ -4,9 +4,18 @@ using UnityEngine;
 
 public static class TypeUtils
 {
+    public static bool ContaineType<T>(this List<T> list, Type type)
+    {
+        foreach (var item in list)
+        {
+            if (item.GetType() == type)
+                return true;
+        }
+        return false;
+    }
+
     public static List<Type> GetInheranceCompo(this object obj, bool printCompo = false)
     {
-
         List<Type> composition = new List<Type>();
 
         Type current = obj.GetType();

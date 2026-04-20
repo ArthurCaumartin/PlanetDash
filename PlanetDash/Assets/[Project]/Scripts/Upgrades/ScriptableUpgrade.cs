@@ -1,10 +1,16 @@
 using UnityEngine;
 
-public abstract class ScriptableUpgrade : ScriptableObject
+
+[CreateAssetMenu(fileName = "Upgrade_", menuName = "Mwa/Upgrade")]
+public class ScriptableUpgrade : ScriptableObject
 {
-    public virtual IAbility Decorate(IAbility ability) { return ability; }
-    public virtual void ApplyStatChange(IAbility ability)
-    {
-        // Debug.Log(name + " Apply stat change !");
-    }
+    [SerializeField] private Ability _abilityPrefab;
+
+    [SerializeField] private int _strenght = 0;
+    [SerializeField] private int _intelligence = 0;
+    [SerializeField] private int _dexterity = 0;
+    [SerializeField] private int _luck = 0;
+
+
+    public Ability Ability => _abilityPrefab;
 }
