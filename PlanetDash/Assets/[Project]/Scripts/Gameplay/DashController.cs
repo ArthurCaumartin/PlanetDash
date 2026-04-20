@@ -17,6 +17,7 @@ public class DashController : MonoBehaviour
     private Task _dashSequenceTask = null;
 
     public float DetectionRadius => _detectionRadius;
+    public bool IsDashing => _dashSequenceTask != null;
 
 
     private void Awake()
