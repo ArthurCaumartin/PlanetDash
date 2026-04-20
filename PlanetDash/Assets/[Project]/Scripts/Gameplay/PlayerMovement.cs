@@ -18,15 +18,11 @@ public class PlayerMovement : CircularSurfaceMovement
         _inputDirection = inputDir;
     }
 
-
-
     private void OnJump(InputValue value)
     {
         if (value.Get<float>() > .5f)
             Jump();
     }
-
-
 }
 
 
