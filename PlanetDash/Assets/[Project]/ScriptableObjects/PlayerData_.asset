@@ -9,11 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0dc40e5dd7545b8498a507ab3b16594f, type: 3}
-  m_Name: Upgrade_Test
+  m_Script: {fileID: 11500000, guid: dbb679589db515d418acc2cae719b38e, type: 3}
+  m_Name: PlayerData_
   m_EditorClassIdentifier: 
-  _abilityPrefab: {fileID: 3207102685718220841, guid: b8dd6907724e7444e9a85c4ddbaae4d1, type: 3}
-  _strenght: 0
-  _intelligence: 0
-  _dexterity: 0
-  _luck: 0
+  strenght: 0
+  intelligence: 0
+  dexterity: 0
+  _abilitySelectedList: []
