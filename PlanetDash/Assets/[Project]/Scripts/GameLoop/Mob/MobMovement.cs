@@ -3,9 +3,9 @@ using UnityEngine;
 public class MobMovement : CircularSurfaceMovement
 {
     private int _direction;
-    protected override void Start()
+    protected override void Awake()
     {
-        base.Start();
+        base.Awake();
         _direction = Random.value > .5f ? 1 : -1;
         velocity.x = _direction;
     }
