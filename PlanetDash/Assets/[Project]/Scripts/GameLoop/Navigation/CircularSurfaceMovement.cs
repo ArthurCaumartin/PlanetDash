@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using UnityEditor;
 using UnityEngine;
 
 public abstract class CircularSurfaceMovement : MonoBehaviour
@@ -20,9 +19,10 @@ public abstract class CircularSurfaceMovement : MonoBehaviour
     protected bool isGrounded = false;
 
     public Vector3 Velocity => velocity;
+    public PlanetSurface CurrentSurface => planetSurface;
 
 
-    protected virtual void Start()
+    protected virtual void Awake()
     {
         planetSurface = PlanetUtils.GetNearest(transform.position);
         ComputeInitialeAngleAndAltitude();
@@ -97,10 +97,12 @@ public abstract class CircularSurfaceMovement : MonoBehaviour
         _jumpTask = JumpAnimation(_jumpDuration, _jumpHeight);
     }
 
-    public void SetSurface(PlanetSurface surface)
+    public void SetSurface(PlanetSurface surface, float? angle = null, float? altitude = null)
     {
         planetSurface = surface;
         ComputeInitialeAngleAndAltitude();
+        if (angle != null) currentAngleRadian = (float)angle;
+        if (altitude != null) _altitude = (float)altitude;
     }
 
     public void MoveOnPath(PathData[] path, float duration, Action<float> toDoOnMove = null)
