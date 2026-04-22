@@ -46,18 +46,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b77aaf7dcf3099d4fad9c7fc5fe45254, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 10
-  _attackRadius: 1
-  _layerMask:
-    serializedVersion: 2
-    m_Bits: 1024
   debug:
     enable: 1
     colorA: {r: 0, g: 1, b: 0, a: 1}
     colorB: {r: 0, g: 1, b: 0, a: 1}
     colorC: {r: 0, g: 1, b: 0, a: 1}
   _animator: {fileID: 3365608753040419103}
-  _attackPreSecond: 10
+  _damage: 10
+  _attackPreSecond: 3.7
+  _attackRadius: 2
+  _layerMask:
+    serializedVersion: 2
+    m_Bits: 1024
 --- !u!95 &3365608753040419103
 Animator:
   serializedVersion: 5
