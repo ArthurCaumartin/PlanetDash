@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c0d4f1b1a195e54f94f7dd47ed97617, type: 3}
+  m_Name: WaveData_
+  m_EditorClassIdentifier: 
+  _delayBetweenSpawn: 0.5
+  _waveSpawnList:
+  - count: 11
+    spawnHeight: 20.4
+    mobPrefab: {fileID: 4224534176083767347, guid: 9fe142f28d793fc4698e04f7b3c77f67, type: 3}
+  - count: 1
+    spawnHeight: 19.96
+    mobPrefab: {fileID: 4224534176083767347, guid: 9fe142f28d793fc4698e04f7b3c77f67, type: 3}
+  - count: 1
+    spawnHeight: 44.94
+    mobPrefab: {fileID: 4224534176083767347, guid: 9fe142f28d793fc4698e04f7b3c77f67, type: 3}
+  - count: 1
+    spawnHeight: 17.96
+    mobPrefab: {fileID: 4224534176083767347, guid: 9fe142f28d793fc4698e04f7b3c77f67, type: 3}
