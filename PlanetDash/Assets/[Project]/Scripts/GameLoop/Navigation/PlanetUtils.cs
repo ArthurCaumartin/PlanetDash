@@ -17,6 +17,7 @@ public static class PlanetUtils
 
     public static PlanetSurface GetNearest(Vector3 position)
     {
+        FetchAllSurfaceFromeScene();
         if (_surfaceList == null || _surfaceList.Count == 0) return null;
 
         PlanetSurface toReturn = null;

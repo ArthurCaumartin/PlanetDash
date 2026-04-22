@@ -10,7 +10,7 @@ public class PlanetSurface : MonoBehaviour
 
     private void Awake()
     {
-        PlanetUtils.FetchAllSurfaceFromeScene();
+        // PlanetUtils.FetchAllSurfaceFromeScene();
         OnValidate();
     }
 
