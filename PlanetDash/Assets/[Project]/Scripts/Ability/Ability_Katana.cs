@@ -3,12 +3,13 @@ using UnityEngine;
 
 public class Ability_Katana : Ability
 {
-    [SerializeField] private float _damage = 10;
-    [SerializeField] private float _attackRadius = 1;
-    [SerializeField] private LayerMask _layerMask;
     [SerializeField] private DebugCondition debug;
     [SerializeField] private Animator _animator;
-    public float _attackPreSecond = 1;
+    [Space]
+    [SerializeField] private float _damage = 10;
+    [SerializeField] private float _attackPreSecond = 1;
+    [SerializeField] private float _attackRadius = 1;
+    [SerializeField] private LayerMask _layerMask;
     private float _attackTimer = 0;
 
     private void Start()
