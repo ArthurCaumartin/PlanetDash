@@ -14,7 +14,7 @@ public class Ability_Missile : Ability
 
     private void SpawnMissile(Transform spawnTransform, Damagable target)
     {
-        Missile missile = Instantiate(missilePrefab, spawnTransform.position + spawnTransform.up, spawnTransform.rotation);
+        Missile missile = Instantiate(missilePrefab, spawnTransform.position + (spawnTransform.up * 2), spawnTransform.rotation);
         missile.Init(target, 50, 10, 150, 3);
     }
 }

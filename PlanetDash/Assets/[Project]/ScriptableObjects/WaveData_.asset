@@ -14,15 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _delayBetweenSpawn: 0.5
   _waveSpawnList:
-  - count: 11
+  - count: 5
     spawnHeight: 20.4
-    mobPrefab: {fileID: 4224534176083767347, guid: 9fe142f28d793fc4698e04f7b3c77f67, type: 3}
-  - count: 1
-    spawnHeight: 19.96
-    mobPrefab: {fileID: 4224534176083767347, guid: 9fe142f28d793fc4698e04f7b3c77f67, type: 3}
-  - count: 1
-    spawnHeight: 44.94
-    mobPrefab: {fileID: 4224534176083767347, guid: 9fe142f28d793fc4698e04f7b3c77f67, type: 3}
-  - count: 1
-    spawnHeight: 17.96
     mobPrefab: {fileID: 4224534176083767347, guid: 9fe142f28d793fc4698e04f7b3c77f67, type: 3}

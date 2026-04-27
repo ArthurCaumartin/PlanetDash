@@ -53,7 +53,7 @@ MonoBehaviour:
     colorC: {r: 0, g: 1, b: 0, a: 1}
   _animator: {fileID: 3365608753040419103}
   _damage: 10
-  _attackPreSecond: 3.7
+  _attackPreSecond: 1
   _attackRadius: 2
   _layerMask:
     serializedVersion: 2

@@ -41,7 +41,7 @@ public abstract class CircularSurfaceMovement : MonoBehaviour
 
         // Negative sign reverses tangential direction
         // decrease angle = move right / increase angle = move left
-        currentAngleRadian -= (velocity.x * _movementSpeed * Time.deltaTime) / planetSurface.Radius;
+        currentAngleRadian -= (velocity.x * _movementSpeed * Time.deltaTime * GameTimeControler.Scale) / planetSurface.Radius;
         ComputePositionAndRotation(currentAngleRadian);
     }
 
@@ -75,8 +75,8 @@ public abstract class CircularSurfaceMovement : MonoBehaviour
             isGrounded = false;
             if (_jumpTask == null)
             {
-                _currentFallingSpeed += Time.deltaTime * _fallingSpeed;
-                _altitude -= Time.deltaTime * _gravityScale * _currentFallingSpeed;
+                _currentFallingSpeed += Time.deltaTime * _fallingSpeed * GameTimeControler.Scale;
+                _altitude -= Time.deltaTime * _gravityScale * _currentFallingSpeed * GameTimeControler.Scale;
             }
         }
 
@@ -118,7 +118,7 @@ public abstract class CircularSurfaceMovement : MonoBehaviour
         float time = 0;
         while (time < duration)
         {
-            time += Time.deltaTime;
+            time += Time.deltaTime * GameTimeControler.Scale;
             _altitude = Mathf.Lerp(startHeight, target, Mathf.InverseLerp(0, duration, time));
             await Task.Yield();
         }

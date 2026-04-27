@@ -1,0 +1,18 @@
+
+
+
+
+/// class CurrentGameData
+///     private int strenght;
+///     ...
+/// 
+/// 
+///     ComputeStat(ScriptableUpgrade[] updgrades);
+/// 
+
+
+
+
+
+
+

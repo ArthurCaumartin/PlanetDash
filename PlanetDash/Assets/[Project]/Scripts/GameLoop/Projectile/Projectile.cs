@@ -24,6 +24,7 @@ public abstract class Projectile : MonoBehaviour
 
     protected void TryDetectDamagable()
     {
+        Debug.DrawLine(lastFramePosition, transform.position, Color.red, 10);
         RaycastHit2D[] hits = Physics2D.LinecastAll(lastFramePosition, transform.position);
         // print("Hit count : " + hits.Length);
         if (hits.Length == 0) return;

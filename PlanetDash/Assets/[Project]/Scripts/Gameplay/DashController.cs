@@ -11,6 +11,7 @@ public class DashController : MonoBehaviour
     [SerializeField] private float _coolDownDuration = 1f;
     [SerializeField] private float _dashDamage = 50f;
     [SerializeField] private float _dashRange = 1f;
+    [SerializeField] private float _dashDuration = 0.2f;
     [SerializeField] private float _detectionRadius = 3;
     private CircularSurfaceMovement _circularSurfaceMovement;
     private float _coolDownTimer = 0;
@@ -63,13 +64,12 @@ public class DashController : MonoBehaviour
             }
         }
 
-        _circularSurfaceMovement.MoveOnPath(path, 0.2f, (movementTime) => GameplayEvent.OnDashMove.Invoke(movementTime));
+        _circularSurfaceMovement.MoveOnPath(path, _dashDuration, (movementTime) => GameplayEvent.OnDashMove.Invoke(movementTime));
 
         await Task.Delay((int)(0.5 * 1000));
 
         foreach (var item in detectedDamagable)
         {
-            AudioManager.Instance.Play(AudioManager.Instance.clipHitMarker);
             item.TakeDamage(_dashDamage);
             GameplayEvent.OnDashHit.Invoke(item);
             await Task.Delay((int)(0.1 * 1000));
